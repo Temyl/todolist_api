@@ -52,13 +52,13 @@ const createtodo = async (req, res) => {
 const deletetodo = async (req, res) => {
     const { title, description, datelist } = req.body;
     try {
-        const userinfo_id = req.id
-        const todo = await pool.query('SELECT * FROM todo where userinfo_id = $1', [userinfo_id]);
+        const id = req.id.id
+        const todo = await pool.query('SELECT * FROM todo where id = $1', [id]);
         const Todo = todo[0];
         if (!todo) {
             return res.status(404).json({ message: 'Todo not found' });
         }
-        const deletequery = await pool.quert('DELETE FROM todo where id = $1 AND userinfo_id = $2', [id, userinfo_id]);
+        const deletequery = await pool.query('DELETE FROM todo where id = $1', [id]);
         res.status(200).json({ message: 'Todo deleted successfully'});
     } catch (error) {
         console.error(error);
@@ -70,8 +70,8 @@ const edittodo = async (req, res) => {
     try {
     const { id } = req.params;
     const { title, description, datelist } = req.body;
-    const userinfo_id = req.id;
-    const { rows: todo} = await pool.query('SELECT * FROM todo WHERE title =$3, description =$2 userinfo_id = $1', 
+    const userinfo_id = req.id.id;
+    const { rows: todo} = await pool.query('SELECT * FROM todo WHERE userinfo_id = $1 AND title =$2 AND description =$3', 
     [userinfo_id, title, description]);
     const todos = todo[0];
     if (!todo) {
